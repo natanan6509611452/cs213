@@ -1,17 +1,23 @@
 #include <iostream>
 #include <string>
-using namespace std;
+#include <queue>
+#include <functional>
 
+using namespace std;
 
 class ArmyAdvancement {
 public:
 	struct Position {
 		int X;
 		int Y;
-		int height;
+		float height;
 		bool seen;
-		int shortestFromOrigin;
-		Position(int x = 0, int y = 0, int height = 0, bool seen = false, int shortestFromOrigin = INFINITY) : X(x), Y(y), height(height), seen(seen), shortestFromOrigin(shortestFromOrigin) {}
+		float shortestFromOrigin;
+		Position(int x = 0, int y = 0, float height = 0, bool seen = false, float shortestFromOrigin = INFINITY) : X(x), Y(y), height(height), seen(seen), shortestFromOrigin(shortestFromOrigin) {}
+		
+		bool operator>(Position a) const{
+			return shortestFromOrigin > a.shortestFromOrigin;
+		}
 	};
 
 	ArmyAdvancement(int warZoneSize = 4, int targetNumber = 1, int knownHeightNumber = 0) : warZoneSize(warZoneSize), targetNumber(targetNumber), knownHeightNumber(knownHeightNumber) {
@@ -24,7 +30,9 @@ public:
 		}
 		targets = new Position * [targetNumber];
 		setUp();
-		advance(origin->X, origin->Y);
+		priority_queue<Position, std::vector<Position>, std::greater<Position>>* warZoneQueue = new priority_queue<Position, std::vector<Position>, std::greater<Position>>;
+		warZoneQueue->push(*warZones[origin->X][origin->Y]);
+		advance(warZoneQueue);
 	}
 
 	~ArmyAdvancement()
@@ -50,14 +58,18 @@ public:
 		cout << "Enter war zone size, target number, known height number, origin position, and origin height (?,?,?,?,?,?)." << endl;
 		origin = new Position;
 		cin >> warZoneSize >> targetNumber >> knownHeightNumber >> origin->X >> origin->Y >> origin->height;
-		cout << "Origin: " << origin->X << " " << origin->Y << endl;
+		(origin->X)--;
+		(origin->Y)--;
 
 		int X;
 		int Y;
-		int height;
+		float height;
+
 		for (int i = 0; i < targetNumber; i++) {
 			cin >> X;
 			cin >> Y;
+			X--;
+			Y--;
 			cin >> height;
 			targets[i] = new Position(X, Y, height);
 		}
@@ -70,41 +82,61 @@ public:
 			cin >> height;
 			warZones[X][Y] = new Position(X, Y, height);
 		}
+
+		origin->shortestFromOrigin = 0;
+		warZones[origin->X][origin->Y] = origin;
 	}
 
-	void advance(int startX, int startY, int previousHeight = 0, int previousDay = 0) {
-		if (warZones[startX][startY]->seen != true) {
-			warZones[startX][startY]->seen = true;
-			if (warZones[startX][startY]->height != -1) {
-				if (previousHeight != 0) {
-					int caculatedDay = previousDay + abs(previousHeight - warZones[startX][startY]->height) + 1;
-					if (caculatedDay < warZones[startX][startY]->shortestFromOrigin) {
-						warZones[startX][startY]->shortestFromOrigin = caculatedDay;
+	void advance(priority_queue<Position, std::vector<Position>, std::greater<Position>>* warZoneQueue) {
+		if (!warZoneQueue->empty()) {
+			Position currentPosition = warZoneQueue->top();
+			warZoneQueue->pop();
+			if (currentPosition.seen != true) {
+				warZones[currentPosition.X][currentPosition.Y]->seen = true;
+				Position* leftPosition;
+				Position* topPosition;
+				Position* rightPosition;
+				Position* bottomPosition;
+
+				if ((currentPosition.X - 1) >= 0) {
+					topPosition = warZones[currentPosition.X - 1][currentPosition.Y];
+					if (topPosition->height != -1 && topPosition->shortestFromOrigin != 0) {
+						topPosition->shortestFromOrigin = min(currentPosition.shortestFromOrigin + abs(currentPosition.height - topPosition->height) + 1, topPosition->shortestFromOrigin);
+						warZoneQueue->push(*topPosition);
 					}
 				}
-				else {
-					warZones[startX][startY]->shortestFromOrigin = 0;
+				if ((currentPosition.Y - 1) >= 0) {
+					leftPosition = warZones[currentPosition.X][currentPosition.Y - 1];
+					if (leftPosition->height != -1 && leftPosition->shortestFromOrigin != 0) {
+						leftPosition->shortestFromOrigin = min(currentPosition.shortestFromOrigin + abs(currentPosition.height - leftPosition->height) + 1, leftPosition->shortestFromOrigin);
+						warZoneQueue->push(*leftPosition);
+					}
 				}
-
-				if ((startX - 1) >= 0) {
-					advance(startX - 1, startY, warZones[startX][startY]->height, warZones[startX][startY]->shortestFromOrigin);
+				if ((currentPosition.X + 1) < warZoneSize) {
+					bottomPosition = warZones[currentPosition.X + 1][currentPosition.Y];
+					if (bottomPosition->height != -1 && bottomPosition->shortestFromOrigin != 0) {
+						bottomPosition->shortestFromOrigin = min(currentPosition.shortestFromOrigin + abs(currentPosition.height - bottomPosition->height) + 1, bottomPosition->shortestFromOrigin);
+						warZoneQueue->push(*bottomPosition);
+					}
 				}
-				if ((startY - 1) >= 0) {
-					advance(startX, startY - 1, warZones[startX][startY]->height, warZones[startX][startY]->shortestFromOrigin);
-				}
-				if ((startX + 1) < warZoneSize) {
-					advance(startX + 1, startY, warZones[startX][startY]->height, warZones[startX][startY]->shortestFromOrigin);
-				}
-				if ((startY + 1) < warZoneSize) {
-					advance(startX, startY + 1, warZones[startX][startY]->height, warZones[startX][startY]->shortestFromOrigin);
+				if ((currentPosition.Y + 1) < warZoneSize) {
+					rightPosition = warZones[currentPosition.X][currentPosition.Y + 1];
+					if (rightPosition->height != -1 && rightPosition->shortestFromOrigin != 0) {
+						rightPosition->shortestFromOrigin = min(currentPosition.shortestFromOrigin + abs(currentPosition.height - rightPosition->height) + 1, rightPosition->shortestFromOrigin);
+						warZoneQueue->push(*rightPosition);
+					}
 				}
 			}
+			advance(warZoneQueue);
+		}
+		for (int i = 0; i < targetNumber; i++) {
+			targets[i]->shortestFromOrigin = warZones[targets[i]->X][targets[i]->Y]->shortestFromOrigin;
 		}
 	}
 
 	int findFailed() {
 		for (int i = 0; i < targetNumber; i++) {
-			if (targets[i]->height == -1) {
+			if (targets[i]->shortestFromOrigin >= INFINITY) {
 				failedCount++;
 			}
 		}
@@ -112,7 +144,7 @@ public:
 	}
 
 	Position* findFastest() {
-		int fastestDay = INT16_MAX;
+		float fastestDay = INFINITY;
 		Position* fastestTroops = NULL;
 		for (int i = 0; i < targetNumber; i++) {
 			if (targets[i]->shortestFromOrigin < fastestDay) {
@@ -124,10 +156,10 @@ public:
 	}
 
 	Position* findSlowest() {
-		int longestDay = INT16_MIN;
+		float longestDay = -INFINITY;
 		Position* slowestTroops = NULL;
 		for (int i = 0; i < targetNumber; i++) {
-			if (targets[i]->shortestFromOrigin > longestDay) {
+			if (targets[i]->shortestFromOrigin > longestDay && targets[i]->shortestFromOrigin != INT16_MAX) {
 				longestDay = targets[i]->shortestFromOrigin;
 				slowestTroops = targets[i];
 			}
@@ -136,11 +168,29 @@ public:
 	}
 
 	void printDay() {
+		cout << "========== " << "Day(s) Required From Base" << " ==========" << endl;
 		for (int i = 0; i < warZoneSize; i++) {
 			for (int j = 0; j < warZoneSize; j++) {
 				cout << warZones[i][j]->shortestFromOrigin << " ";
 			}
 			cout << endl;
+		}
+	}
+
+	void printHeightMap() {
+		cout << "========== " << "War Zone Heights" << " ==========" << endl;
+		for (int i = 0; i < warZoneSize; i++) {
+			for (int j = 0; j < warZoneSize; j++) {
+				cout << warZones[i][j]->height << " ";
+			}
+			cout << endl;
+		}
+	}
+
+	void printTargets() {
+		cout << "========== " << "Targets" << " ==========" << endl;
+		for (int i = 0; i < targetNumber; i++) {
+			cout << "Targets at (" << targets[i]->X << ", " << targets[i]->Y << ") Height: " << targets[i]->height << endl;
 		}
 	}
 
@@ -156,14 +206,20 @@ private:
 
 int main(int argc, char** argv) {
 	ArmyAdvancement* firstStrategy = new ArmyAdvancement();
+	firstStrategy->printHeightMap();
 	int failedCount = firstStrategy->findFailed();
 	firstStrategy->printDay();
+	firstStrategy->printTargets();
+
 	if (failedCount > 0) {
+		cout << "========== " << "Troops Failed to Settle" << " ==========" << endl;
 		cout << failedCount << endl;
 	}
 	else {
+		cout << "========== " << "Most Day(s)" << " ==========" << endl;
 		ArmyAdvancement::Position* slowestTroops = firstStrategy->findSlowest();
 		cout << slowestTroops->shortestFromOrigin << endl;
+		cout << "========== " << "Least Day(s)" << " ==========" << endl;
 		ArmyAdvancement::Position* fastestTroop = firstStrategy->findFastest();
 		cout << fastestTroop->shortestFromOrigin << endl;
 	}
