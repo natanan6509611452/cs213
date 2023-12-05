@@ -2,6 +2,7 @@
 #include <string>
 #include <queue>
 #include <functional>
+#include <cmath>
 
 using namespace std;
 
@@ -162,7 +163,7 @@ public:
 		float longestDay = -INFINITY;
 		Position* slowestTroops = NULL;
 		for (int i = 0; i < targetNumber; i++) {
-			if (targets[i]->shortestFromOrigin > longestDay && targets[i]->shortestFromOrigin != INT16_MAX) {
+			if (targets[i]->shortestFromOrigin > longestDay && targets[i]->shortestFromOrigin != INFINITY) {
 				longestDay = targets[i]->shortestFromOrigin;
 				slowestTroops = targets[i];
 			}
