@@ -18,6 +18,11 @@ public:
 		bool operator>(Position a) const{
 			return shortestFromOrigin > a.shortestFromOrigin;
 		}
+
+		bool operator==(const Position& other) const
+		{
+			return X == other.X && Y == other.Y && height == other.height && seen == other.seen && shortestFromOrigin == other.shortestFromOrigin;
+		}
 	};
 
 	ArmyAdvancement(int warZoneSize = 4, int targetNumber = 1, int knownHeightNumber = 0) : warZoneSize(warZoneSize), targetNumber(targetNumber), knownHeightNumber(knownHeightNumber) {
