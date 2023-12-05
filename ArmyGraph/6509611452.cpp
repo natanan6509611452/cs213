@@ -214,16 +214,16 @@ private:
 };
 
 int main(int argc, char** argv) {
-	ArmyAdvancement* firstStrategy = new ArmyAdvancement();
-	int failedCount = firstStrategy->findFailed();
+	ArmyAdvancement* strategy = new ArmyAdvancement();
+	int failedCount = strategy->findFailed();
 
 	if (failedCount > 0) {
 		cout << failedCount << endl;
 	}
 	else {
-		ArmyAdvancement::Position* slowestTroops = firstStrategy->findSlowest();
+		ArmyAdvancement::Position* slowestTroops = strategy->findSlowest();
 		cout << slowestTroops->shortestFromOrigin << endl;
-		ArmyAdvancement::Position* fastestTroop = firstStrategy->findFastest();
+		ArmyAdvancement::Position* fastestTroop = strategy->findFastest();
 		cout << fastestTroop->shortestFromOrigin << endl;
 	}
 }
