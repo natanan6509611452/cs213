@@ -18,6 +18,11 @@ public:
 		bool operator>(Position a) const{
 			return shortestFromOrigin > a.shortestFromOrigin;
 		}
+
+		bool operator==(const Position& other) const
+		{
+			return X == other.X && Y == other.Y && height == other.height && seen == other.seen && shortestFromOrigin == other.shortestFromOrigin;
+		}
 	};
 
 	ArmyAdvancement(int warZoneSize = 4, int targetNumber = 1, int knownHeightNumber = 0) : warZoneSize(warZoneSize), targetNumber(targetNumber), knownHeightNumber(knownHeightNumber) {
@@ -163,6 +168,33 @@ public:
 			}
 		}
 		return slowestTroops;
+	}
+
+	void printDay() {
+		cout << "========== " << "Day(s) Required From Base" << " ==========" << endl;
+		for (int i = 0; i < warZoneSize; i++) {
+			for (int j = 0; j < warZoneSize; j++) {
+				cout << warZones[i][j]->shortestFromOrigin << " ";
+			}
+			cout << endl;
+		}
+	}
+
+	void printHeightMap() {
+		cout << "========== " << "War Zone Heights" << " ==========" << endl;
+		for (int i = 0; i < warZoneSize; i++) {
+			for (int j = 0; j < warZoneSize; j++) {
+				cout << warZones[i][j]->height << " ";
+			}
+			cout << endl;
+		}
+	}
+
+	void printTargets() {
+		cout << "========== " << "Targets" << " ==========" << endl;
+		for (int i = 0; i < targetNumber; i++) {
+			cout << "Targets at (" << targets[i]->X << ", " << targets[i]->Y << ") Height: " << targets[i]->height << endl;
+		}
 	}
 
 private:
