@@ -23,7 +23,6 @@
     <ClCompile Include="SortAlgorithm.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Header.h" />
     <ClInclude Include="SortAlgorithm.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

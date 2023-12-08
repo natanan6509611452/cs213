@@ -15,21 +15,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\eclipse-workspace\ModifiedLinkedList\modifiedLinkedList\ModifiedLinkedList.h">
+    <ClInclude Include="ModifiedLinkedList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\eclipse-workspace\ModifiedLinkedList\modifiedLinkedList\Operators.h">
+    <ClInclude Include="Operators.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\eclipse-workspace\ModifiedLinkedList\modifiedLinkedList\ModifiedLinkedList.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\eclipse-workspace\ModifiedLinkedList\modifiedLinkedList\Operators.cpp">
+    <ClCompile Include="ModifiedLinkedList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\eclipse-workspace\ModifiedLinkedList\modifiedLinkedList\main.cpp">
+    <ClCompile Include="Operators.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

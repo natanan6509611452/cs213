@@ -127,13 +127,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\eclipse-workspace\ModifiedLinkedList\modifiedLinkedList\ModifiedLinkedList.h" />
-    <ClInclude Include="..\..\..\..\eclipse-workspace\ModifiedLinkedList\modifiedLinkedList\Operators.h" />
+    <ClInclude Include="ModifiedLinkedList.h" />
+    <ClInclude Include="Operators.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\eclipse-workspace\ModifiedLinkedList\modifiedLinkedList\main.cpp" />
-    <ClCompile Include="..\..\..\..\eclipse-workspace\ModifiedLinkedList\modifiedLinkedList\ModifiedLinkedList.cpp" />
-    <ClCompile Include="..\..\..\..\eclipse-workspace\ModifiedLinkedList\modifiedLinkedList\Operators.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="ModifiedLinkedList.cpp" />
+    <ClCompile Include="Operators.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
