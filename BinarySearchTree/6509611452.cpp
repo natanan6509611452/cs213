@@ -15,6 +15,22 @@
 using namespace std;
 
 class BinarySearchTree {
+protected:
+	struct Node {
+		string data;
+		deque<int>* indices;
+		BinarySearchTree* left;
+		BinarySearchTree* right;
+
+		Node(string data, int index) {
+			this->data = data;
+			indices = new deque<int>;
+			indices->push_back(index);
+			left = right = NULL;
+		}
+	};
+	Node* root = NULL;
+
 public:
 	BinarySearchTree() {
 		root = NULL;
@@ -120,26 +136,10 @@ public:
 			printTreeBeginWith(character);
 		}
 	}
-
-protected:
-	struct Node {
-		string data;
-		deque<int>* indices;
-		BinarySearchTree* left;
-		BinarySearchTree* right;
-
-		Node(string data, int index) {
-			this->data = data;
-			indices = new deque<int>;
-			indices->push_back(index);
-			left = right = NULL;
-		}
-	};
-	Node* root;
-
 };
 
 int main(int argc, char** argv) {
 	BinarySearchTree* tree = new BinarySearchTree();
 	tree->printTreeFromFile("document.txt");
+	tree->printTree();
 }
