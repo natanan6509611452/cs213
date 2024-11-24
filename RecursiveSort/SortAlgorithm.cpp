@@ -38,6 +38,29 @@ void SortAlgorithm::quicksort(int* start, int* end)
 
 int* SortAlgorithm::partition(int* start, int* end)
 {
+	int* mid = start + (int)floor(distance(start, end) / 2);
+	int* median = start;
+	if (*start < *mid) {
+		if (*mid < *end) {
+			median = mid;
+		}
+		else if (*start < *end) {
+			median = start;
+		}
+		else {
+			median = end;
+		}
+	}
+	else if (*start < *end) {
+		median = start;
+	}
+	else if (*mid < *end) {
+		median = end;
+	}
+	else {
+		median = mid;
+	}
+
 	int* pivot = end;
 	start--;
 	while (start < end) {

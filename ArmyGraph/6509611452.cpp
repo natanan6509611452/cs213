@@ -156,7 +156,7 @@ public:
 		float fastestDay = INFINITY;
 		Position* fastestTroops = NULL;
 		for (int i = 0; i < targetNumber; i++) {
-			if (targets[i]->shortestFromOrigin < fastestDay) {
+			if (targets[i]->shortestFromOrigin < fastestDay) { 
 				fastestDay = targets[i]->shortestFromOrigin;
 				fastestTroops = targets[i];
 			}
